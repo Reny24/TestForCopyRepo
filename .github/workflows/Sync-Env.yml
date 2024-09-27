@@ -6,23 +6,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout della repository CAT
+
     - name: Checkout CAT repo
       uses: actions/checkout@v3
       with:
-        ref: main  # Modifica con il branch giusto
+        ref: main  
 
-    # Step 2: Clona la repository SIT nella repository CAT (ma senza modifiche per ora)
     - name: Clonare repository SIT
       run: |
         git clone https://github.com/Reny24/TestForCopyFolder.git sit-repo
 
-    # Step 3: Copia solo la cartella SIT dalla repository SIT alla repository CAT
     - name: Copiare la cartella SIT
       run: |
         cp -r sit-repo/sit ./sit  # Cambia il percorso per adattarlo alla struttura
 
-    # Step 4: Rinomina la cartella SIT in CAT e modifica i contenuti all'interno
     - name: Modificare nomi cartelle e contenuti (SIT -> CAT)
       run: |
         # Cambia il nome della cartella SIT in CAT
@@ -31,7 +28,9 @@ jobs:
         # Cerca e sostituisci 'SIT' con 'CAT' nel contenuto dei file
         find ./cat -type f -exec sed -i 's/\bsit\b/cat/g' {} +
 
-    # Step 5: Aggiungere e committare le modifiche nella repository CAT
+    - name: Rimuovere la cartella sit-repo
+      run: rm -rf sit-repo
+
     - name: Commit delle modifiche
       run: |
         git config user.name "Reny24"
