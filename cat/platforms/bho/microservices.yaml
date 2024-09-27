@@ -1,0 +1,30 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: bho-batch
+spec:
+  chart:
+    spec:
+      chart: common-release
+      sourceRef:
+        kind: HelmRepository
+        name: star-helm-common
+        namespace: flux-system
+      version: "0.1.1"
+  interval: 10m
+  install:
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: "bho-batch"
+    image:
+      repository: macheneso/peppiniello/bho/bho-batch
+      tag: 0.0.1-SNAPSHOT
+      pullPolicy: Always
+    imagePullSecrets: 
+      - name: regcred
+    service:
+      targetPort: 8080
+  valuesFrom:
+    - name: bho-values
+      kind: ConfigMap
